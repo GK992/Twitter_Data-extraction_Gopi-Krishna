@@ -1,0 +1,36 @@
+import tweepy
+import json
+import os
+
+# Set your Twitter API credentials
+consumer_key = "CSRrpvIdV3gP5q9mTfy6sBC9J"
+consumer_secret = "hpEabAMxI0OKu5HLzRN8QnSoAbHRz3gfuvmn8SF8Ck3pZmAeSn"
+access_token = "739482259116429313-tCNqtTNaovCKLGhRVT9z49atbg7S0b8"
+access_token_secret = "njRkQ0uvxnS5YrUxIxZiKewbG2fBVLv8A2mD47GYZJPTa"
+
+# Authenticate with Twitter
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+auth.set_access_token(access_token, access_token_secret)
+api = tweepy.API(auth)
+
+# Fetch tweets based on a keyword
+keyword = "Nidec"
+tweet_count = 1000  # Number of tweets to fetch
+
+try:
+    tweets = api.search_tweets(q=keyword, count=tweet_count)
+    tweet_data = []
+
+    for tweet in tweets:
+        tweet_data.append(tweet._json)
+
+    file_name = keyword + "-twitter.json"
+    file_path = os.path.join(os.getcwd(), file_name)
+
+    with open(file_path, 'w') as json_file:
+        json.dump(tweet_data, json_file, indent=4)
+
+    print("Tweets saved successfully!")
+    print("File saved at:", file_path)
+except tweepy.TweepError as e:
+    print("Error occurred while fetching tweets:", e)
