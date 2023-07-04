@@ -1,0 +1,42 @@
+#twitter data sentiemnt analysis
+
+import pandas as pd
+from nltk.sentiment import SentimentIntensityAnalyzer
+import json
+
+# Specify the path to the JSON file
+json_file_path = "C:\\Users\\gsriram\\Nidec-twitter.json"
+
+# Load the JSON file
+with open(json_file_path, 'r') as file:
+    data = json.load(file)
+
+# Create a SentimentIntensityAnalyzer object
+sia = SentimentIntensityAnalyzer()
+
+# Initialize counters
+positive_count = 0
+negative_count = 0
+neutral_count = 0
+
+# Perform sentiment analysis on each article
+for article in data:
+    # Extract the text from the article
+    text = article['text']
+
+    # Perform sentiment analysis
+    sentiment_score = sia.polarity_scores(text)
+    compound_score = sentiment_score['compound']
+
+    # Classify the sentiment
+    if compound_score >= 0.05:
+        positive_count += 1
+    elif compound_score <= -0.05:
+        negative_count += 1
+    else:
+        neutral_count += 1
+
+# Print the results
+print("Positive articles:", positive_count)
+print("Negative articles:", negative_count)
+print("Neutral articles:", neutral_count)
