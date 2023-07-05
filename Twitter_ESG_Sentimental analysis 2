@@ -1,0 +1,46 @@
+import pandas as pd
+from nltk.sentiment import SentimentIntensityAnalyzer
+import json
+
+# Specify the path to the JSON file
+json_file_path = "C:\\Users\\gsriram\\Nidec-twitter.json"
+
+# Specify positive and negative keywords
+positive_keywords = ['sustainability', 'renewable', 'clean', 'green', 'eco-friendly', 'ethical', 'responsible']
+negative_keywords = ['pollution', 'waste', 'emissions', 'toxic', 'non-renewable', 'unethical', 'irresponsible']
+
+# Load the JSON file
+with open(json_file_path, 'r') as file:
+    data = json.load(file)
+
+# Create a SentimentIntensityAnalyzer object
+sia = SentimentIntensityAnalyzer()
+
+# Initialize counters
+positive_count = 0
+negative_count = 0
+neutral_count = 0
+
+# Perform sentiment analysis on each article
+for article in data:
+    # Extract the text from the article
+    text = article['text']
+
+    # Perform sentiment analysis
+    sentiment_score = sia.polarity_scores(text)
+    compound_score = sentiment_score['compound']
+
+    # Check if positive keywords are present
+    if any(keyword in text.lower() for keyword in positive_keywords):
+        positive_count += 1
+    # Check if negative keywords are present
+    elif any(keyword in text.lower() for keyword in negative_keywords):
+        negative_count += 1
+    # Categorize as neutral if no positive or negative keywords are found
+    else:
+        neutral_count += 1
+
+# Print the results
+print("Positive articles:", positive_count)
+print("Negative articles:", negative_count)
+print("Neutral articles:", neutral_count)
